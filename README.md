@@ -1,7 +1,6 @@
-# DriftHawk
 ![DriftHawk Wordmark](dh_wordmark.png)
 
-**Spot drift. Ship proof.**
+#### *Spot drift. Ship proof.*
 Provision and govern private-cloud and OpenShift with Terraform and Argo CD, enforce OPA policies, sign and attest supply chain, automate approvals via ChatOps, and continuously validate gates with a red-team harness.
 
 ## Outcomes
