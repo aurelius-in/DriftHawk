@@ -16,4 +16,8 @@ def test_headers_sanitized():
     assert r2.status_code == 200
     assert "X-Request-Duration-ms" in r2.headers
     assert "X-Trace-Id" in r2.headers
+    # lower-cased headers view
+    r3 = client.get("/headers/lower", headers={"X-Demo": "ok"})
+    assert r3.status_code == 200
+    assert "x-demo" in r3.json()["headers"]
 

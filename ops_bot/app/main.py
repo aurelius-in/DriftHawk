@@ -42,7 +42,8 @@ app.add_middleware(
 )
 allowed_hosts = os.getenv("ALLOWED_HOSTS", "*").split(",")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
-app.add_middleware(GZipMiddleware, minimum_size=500)
+gzip_min = int(os.getenv("GZIP_MIN_SIZE", "500") or "500")
+app.add_middleware(GZipMiddleware, minimum_size=gzip_min)
 
 app.include_router(chatops.router, prefix="/chatops")
 app.include_router(change.router, prefix="/change")
@@ -458,6 +459,14 @@ def request_id_endpoint(request: Request):
     return {"request_id": getattr(request.state, "request_id", "-")}
 
 
+@app.get("/trace")
+def trace_info(request: Request):
+    return {
+        "request_id": getattr(request.state, "request_id", "-"),
+        "trace_id": getattr(request.state, "trace_id", "-"),
+    }
+
+
 @app.get("/flags")
 def flags():
     return {
@@ -483,6 +492,17 @@ def headers(request: Request):
         if "authorization" in lk or "cookie" in lk:
             continue
         sanitized[header_title_case(lk)] = v
+    return {"headers": sanitized}
+
+
+@app.get("/headers/lower")
+def headers_lower(request: Request):
+    sanitized: dict[str, str] = {}
+    for k, v in request.headers.items():
+        lk = k.lower()
+        if "authorization" in lk or "cookie" in lk:
+            continue
+        sanitized[lk] = v
     return {"headers": sanitized}
 
 
