@@ -16,5 +16,3 @@ def impact_brief_markdown(summary: Dict[str, Any]) -> str:
         f"- Risk: {risk} ({risk_level})",
     ]
     return "\n".join(lines)
-
-

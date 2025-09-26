@@ -15,4 +15,5 @@ def test_headers_sanitized():
     r2 = client.get("/ping")
     assert r2.status_code == 200
     assert "X-Request-Duration-ms" in r2.headers
+    assert "X-Trace-Id" in r2.headers
 

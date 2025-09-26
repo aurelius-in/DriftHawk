@@ -134,6 +134,15 @@ compose.down:
 metrics.curl:
 	curl -s http://localhost:8080/metrics | head -n 5
 
+curl.requestid:
+	curl -s -i http://localhost:8080/request-id | sed -n '1,5p'
+
+curl.config:
+	curl -s http://localhost:8080/config | jq
+
+curl.statusz:
+	curl -s http://localhost:8080/statusz | jq
+
 quality:
 	$(MAKE) lint.py && $(MAKE) type.py && $(MAKE) test.bot
 

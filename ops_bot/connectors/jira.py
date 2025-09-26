@@ -35,5 +35,3 @@ def create_change(summary: str, description: str, risk: float, plan_url: Optiona
     except Exception:
         pass
     return "CHG-123"
-
-
