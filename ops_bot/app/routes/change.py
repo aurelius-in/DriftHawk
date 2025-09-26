@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from ..connectors import jira, servicenow
+from ..settings import settings
 
 router = APIRouter()
 
@@ -17,7 +18,12 @@ class ChangeRequest(BaseModel):
 @router.post("/submit")
 def submit(req: ChangeRequest):
   key = jira.create_change(req.summary, req.description, req.risk_score, req.plan_url)
-  servicenow.mirror_change(key, req.summary)
-  return {"status": "pending_approval", "change": key}
+  snow = servicenow.mirror_change(key, req.summary)
+  links = {}
+  if settings.jira_base:
+    links["jira"] = settings.jira_base.rstrip("/") + "/browse/" + key
+  if snow.get("snow"):
+    links["servicenow"] = snow["snow"]
+  return {"status": "pending_approval", "change": key, "links": links}
 
 

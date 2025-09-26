@@ -26,9 +26,15 @@ redteam.run:
 	bash redteam/run_redteam.sh
 
 drift.run:
-	bash ops-bot/jobs/drift_scout.sh
+	bash ops_bot/jobs/drift_scout.sh
 
 run.bot:
 	bash ops_bot/run.sh
+
+compose.up:
+	docker compose up -d
+
+compose.down:
+	docker compose down
 
 

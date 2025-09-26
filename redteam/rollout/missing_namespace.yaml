@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: missing-ns
+spec:
+  template:
+    spec:
+      containers:
+        - name: c
+          image: ghcr.io/OWNER/drifthawk-ops-bot:latest
+
