@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from ops_bot.connectors import slack
 from ..utils.plan import load_plan, summarize_plan
+from ..utils.markdown import impact_brief_markdown
 
 router = APIRouter()
 
@@ -23,10 +24,12 @@ def plan_brief(req: PlanBriefReq):
             "adds": s["adds"],
             "updates": s["updates"],
             "destroys": s["destroys"],
+            "risk_level": s["risk_level"],
         }
     except Exception:
         pass
-    return brief
+    brief_md = impact_brief_markdown(brief)
+    return {"brief": brief, "markdown": brief_md}
 
 
 class PromoteReq(BaseModel):
