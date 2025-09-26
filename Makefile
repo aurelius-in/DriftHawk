@@ -85,4 +85,7 @@ compose.up:
 compose.down:
 	docker compose down
 
+metrics.curl:
+	curl -s http://localhost:8080/metrics | head -n 5
+
 

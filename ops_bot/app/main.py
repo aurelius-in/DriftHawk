@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 import os
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import chatops, change
 from .utils.logging import get_logger
@@ -12,6 +13,7 @@ app = FastAPI(
   contact={"name": "DriftHawk", "url": "https://github.com/aurelius-in/DriftHawk"},
 )
 logger = get_logger(__name__)
+request_counter = Counter("ops_bot_requests_total", "Total HTTP requests", ["path", "method", "status"])
 
 origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -45,5 +47,20 @@ def version():
 @app.get("/")
 def root():
   return {"service": "DriftHawk Ops Bot", "endpoints": ["/chatops", "/change", "/healthz", "/livez", "/readyz", "/version"]}
+
+
+@app.get("/metrics")
+def metrics():
+  return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+
+@app.middleware("http")
+async def count_requests_mw(request: Request, call_next):
+  response = await call_next(request)
+  try:
+    request_counter.labels(path=request.url.path, method=request.method, status=str(response.status_code)).inc()
+  except Exception:
+    pass
+  return response
 
 
