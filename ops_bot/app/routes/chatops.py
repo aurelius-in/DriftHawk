@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ..connectors import slack
+from ops_bot.connectors import slack
 from ..utils.plan import load_plan, summarize_plan
 
 router = APIRouter()
