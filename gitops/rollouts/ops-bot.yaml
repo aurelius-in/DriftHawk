@@ -16,6 +16,7 @@ spec:
       containers:
         - name: ops-bot
           image: ghcr.io/OWNER/drifthawk-ops-bot:sha256-PINNED
+          imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
