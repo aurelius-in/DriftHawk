@@ -105,14 +105,16 @@ Nightly/Weekly → Red-Team Harness → expect policy failures
 ## Getting started
 
 ```bash
-make init
+pip install -r ops-bot/requirements.txt
+make run.bot              # http://localhost:8080/docs
+
 make policy.test
-make tf.plan env=dev
-make brief                 # generate Impact Brief from latest plan
-make argo.sync env=staging
-make change.submit env=prod summary="Promote to prod" risk=0.23
-make redteam.run          # run malicious scenarios, expect gates to block
-make drift.run            # run Drift Scout manually
+make tf.plan ENV=dev
+make graph ENV=dev
+make brief               
+make argo.sync           
+make redteam.run         
+make drift.run           
 ```
 
 ## Configuration
