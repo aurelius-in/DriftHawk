@@ -84,6 +84,17 @@ tf.fmt.all:
 	terraform -chdir=terraform/envs/staging fmt -recursive && \
 	terraform -chdir=terraform/envs/prod fmt -recursive
 
+tf.validate.all:
+	terraform -chdir=terraform/envs/dev init -input=false && terraform -chdir=terraform/envs/dev validate && \
+	terraform -chdir=terraform/envs/staging init -input=false && terraform -chdir=terraform/envs/staging validate && \
+	terraform -chdir=terraform/envs/prod init -input=false && terraform -chdir=terraform/envs/prod validate
+
+tf.lint:
+	tflint -f compact terraform
+
+tf.sec:
+	tfsec --config-file .tfsec.yml --minimum-severity MEDIUM
+
 docker.build.bot:
 	docker build -t drifthawk-ops-bot:dev -f Dockerfile.ops-bot .
 

@@ -1,0 +1,6 @@
+exclude: []
+severity: MEDIUM
+config:
+  terraform_directory: terraform/envs
+  minimum_severity: MEDIUM
+soft_fail: false
