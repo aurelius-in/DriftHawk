@@ -10,6 +10,7 @@ spec:
       securityContext:
         runAsNonRoot: true
         seccompProfile: { type: RuntimeDefault }
+      serviceAccountName: ops-bot-sa
       containers:
         - name: ops-bot
           image: ghcr.io/OWNER/drifthawk-ops-bot:sha256-PINNED
@@ -17,6 +18,7 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             runAsNonRoot: true
+            capabilities: { drop: ["ALL"] }
           ports: [{ containerPort: 8080 }]
           livenessProbe:
             httpGet: { path: /livez, port: 8080 }
