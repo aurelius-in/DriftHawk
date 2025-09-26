@@ -22,4 +22,8 @@ def test_root():
     assert resp.status_code == 200
     body = resp.json()
     assert body.get("service") == "DriftHawk Ops Bot"
+    resp = client.post("/chatops/plan-brief", json={"env": "dev"})
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "brief" in body and "markdown" in body
 
