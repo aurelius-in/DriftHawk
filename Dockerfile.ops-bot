@@ -5,6 +5,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ops_bot /app/ops_bot
 ARG GIT_SHA=dev
 ENV GIT_SHA=$GIT_SHA
+ENV APP_VERSION=0.1.0
 EXPOSE 8080
 RUN useradd -u 10001 -m appuser && chown -R appuser /app
 USER 10001

@@ -1,31 +1,27 @@
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.90.1
+      - id: black
+        language_version: python3
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
     hooks:
-      - id: terraform_fmt
+      - id: flake8
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.35.1
     hooks:
       - id: yamllint
+  - repo: https://github.com/tenpureto/terraform-pre-commit
+    rev: v1.77.0
+    hooks:
+      - id: terraform-fmt
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.9
+    rev: 1.7.10
     hooks:
       - id: bandit
-        args: ["-r", "ops_bot", "-q"]
-  - repo: https://github.com/psf/black
-    rev: 24.8.0
-    hooks:
-      - id: black
-        language_version: python3
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        args: ["--profile=black"]
 

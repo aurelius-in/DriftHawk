@@ -140,6 +140,8 @@ make test.bot
 
 ```bash
 make quality   # runs flake8, mypy, and pytest
+# On Windows:
+make quality.win
 ```
 
 ## Configuration
