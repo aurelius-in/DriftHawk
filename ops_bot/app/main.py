@@ -250,6 +250,16 @@ def hash_text(body: HashBody):
     return {"algorithm": algo, "hex": h.hexdigest()}
 
 
+@app.get("/hash")
+def hash_text_get(text: str, algorithm: str | None = None):
+    algo = (algorithm or "sha256").lower()
+    if algo not in {"sha256", "sha1", "md5", "sha512"}:
+        raise StarletteHTTPException(status_code=422, detail="unsupported algorithm")
+    h = hashlib.new(algo)
+    h.update(text.encode("utf-8"))
+    return {"algorithm": algo, "hex": h.hexdigest()}
+
+
 class TextBody(BaseModel):  # noqa: E402
     text: str
 
@@ -267,6 +277,47 @@ def lowercase(body: TextBody):
 @app.post("/reverse")
 def reverse(body: TextBody):
     return {"text": body.text[::-1]}
+
+
+@app.post("/json/echo")
+def json_echo(body: dict):  # type: ignore[valid-type]
+    return {"json": body}
+
+
+class MathBody(BaseModel):  # noqa: E402
+    a: float
+    b: float
+
+
+@app.post("/math/add")
+def math_add(body: MathBody):
+    return {"result": float(body.a + body.b)}
+
+
+@app.post("/math/mul")
+def math_mul(body: MathBody):
+    return {"result": float(body.a * body.b)}
+
+
+@app.get("/randbool")
+def randbool():
+    return {"value": bool(random.getrandbits(1))}
+
+
+@app.post("/palindrome")
+def palindrome(body: TextBody):
+    t = body.text.lower()
+    return {"is_palindrome": t == t[::-1]}
+
+
+@app.post("/length")
+def length(body: TextBody):
+    return {"length": len(body.text)}
+
+
+@app.post("/trim")
+def trim(body: TextBody):
+    return {"text": body.text.strip()}
 
 
 class B64Body(BaseModel):  # noqa: E402
@@ -291,6 +342,23 @@ def b64(body: B64Body):
         except Exception:
             raise StarletteHTTPException(status_code=422, detail="invalid base64 input")
     return {"result": out}
+
+
+class HexBody(BaseModel):  # noqa: E402
+    text: str
+    mode: str = "encode"
+
+
+@app.post("/hex")
+def hex_route(body: HexBody):
+    if body.mode not in {"encode", "decode"}:
+        raise StarletteHTTPException(status_code=422, detail="mode must be encode or decode")
+    if body.mode == "encode":
+        return {"result": body.text.encode("utf-8").hex()}
+    try:
+        return {"result": bytes.fromhex(body.text).decode("utf-8")}
+    except Exception:
+        raise StarletteHTTPException(status_code=422, detail="invalid hex input")
 
 
 @app.get("/randint")
@@ -327,6 +395,12 @@ def routes(prefix: str | None = None):
 def tz():
     now = datetime.now(timezone.utc)
     return {"epoch": int(now.timestamp()), "iso": now.isoformat()}
+
+
+@app.get("/weekday")
+def weekday():
+    now = datetime.now(timezone.utc)
+    return {"weekday": now.strftime("%A")}
 
 
 @app.get("/datetime")

@@ -94,6 +94,8 @@ def test_info_and_security_headers():
     # hash
     r = client.post("/hash", json={"text": "abc", "algorithm": "sha256"})
     assert r.status_code == 200 and len(r.json().get("hex", "")) == 64
+    r = client.get("/hash", params={"text": "abc", "algorithm": "sha512"})
+    assert r.status_code == 200 and len(r.json().get("hex", "")) == 128
     # case and reverse
     assert client.post("/uppercase", json={"text": "a"}).json()["text"] == "A"
     assert client.post("/lowercase", json={"text": "A"}).json()["text"] == "a"
@@ -106,9 +108,15 @@ def test_info_and_security_headers():
     enc2 = client.post("/b64", json={"text": "/+a=", "mode": "encode", "urlsafe": True}).json()["result"]
     dec2 = client.post("/b64", json={"text": enc2, "mode": "decode", "urlsafe": True}).json()["result"]
     assert dec2 == "/+a="
+    # hex encode/decode
+    hx = client.post("/hex", json={"text": "hi", "mode": "encode"}).json()["result"]
+    assert client.post("/hex", json={"text": hx, "mode": "decode"}).json()["result"] == "hi"
     # randint
     r = client.get("/randint", params={"min": 1, "max": 2})
     assert r.status_code == 200 and r.json()["value"] in (1, 2)
+    # randbool
+    r = client.get("/randbool")
+    assert r.status_code == 200 and isinstance(r.json()["value"], bool)
     # sleep
     r = client.post("/sleep", json={"ms": 5})
     assert r.status_code == 200 and r.json()["slept_ms"] == 5
@@ -117,6 +125,18 @@ def test_info_and_security_headers():
     assert r.status_code == 200 and "routes" in r.json()
     r = client.get("/tz")
     assert r.status_code == 200 and "iso" in r.json()
+    r = client.get("/weekday")
+    assert r.status_code == 200 and "weekday" in r.json()
+    # json echo
+    r = client.post("/json/echo", json={"a": 1})
+    assert r.status_code == 200 and r.json()["json"]["a"] == 1
+    # math
+    assert client.post("/math/add", json={"a": 2, "b": 3}).json()["result"] == 5.0
+    assert client.post("/math/mul", json={"a": 2, "b": 3}).json()["result"] == 6.0
+    # text helpers
+    assert client.post("/palindrome", json={"text": "Level"}).json()["is_palindrome"] is True
+    assert client.post("/length", json={"text": "abc"}).json()["length"] == 3
+    assert client.post("/trim", json={"text": "  hi  "}).json()["text"] == "hi"
     # datetime, uuids, randfloat, GET uppercase, routes filter
     r = client.get("/datetime")
     assert r.status_code == 200 and "epoch_ms" in r.json()
