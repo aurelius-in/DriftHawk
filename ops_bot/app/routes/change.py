@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ..connectors import jira, servicenow
+from ..connectors import jira, servicenow, slack
 from ..settings import settings
 
 router = APIRouter()
@@ -24,6 +24,7 @@ def submit(req: ChangeRequest):
     links["jira"] = settings.jira_base.rstrip("/") + "/browse/" + key
   if snow.get("snow"):
     links["servicenow"] = snow["snow"]
+  slack.post_message(f"Change submitted: {key} — {req.summary}")
   return {"status": "pending_approval", "change": key, "links": links}
 
 

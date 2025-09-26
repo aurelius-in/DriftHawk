@@ -13,5 +13,9 @@ configMapGenerator:
   - name: ops-bot-config
     literals:
       - LOG_LEVEL=WARNING
+secretGenerator:
+  - name: ops-bot-secrets
+    literals:
+      - PLACEHOLDER=1
 
 

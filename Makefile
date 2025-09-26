@@ -16,6 +16,15 @@ policy.test.staging:
 policy.test.prod:
 	conftest test gitops/overlays/prod -p policy/opa
 
+policy.test.build.dev:
+	kustomize build gitops/overlays/dev | conftest test -p policy/opa -
+
+policy.test.build.staging:
+	kustomize build gitops/overlays/staging | conftest test -p policy/opa -
+
+policy.test.build.prod:
+	kustomize build gitops/overlays/prod | conftest test -p policy/opa -
+
 tf.plan:
 	cd terraform/envs/$(ENV) && terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
 
