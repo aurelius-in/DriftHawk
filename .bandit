@@ -1,0 +1,4 @@
+[bandit]
+exclude = ops_bot/tests
+skips = B101
+
