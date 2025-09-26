@@ -81,6 +81,14 @@ deny[msg] {
   msg := "Images must come from ghcr.io"
 }
 
+# Require imagePullPolicy IfNotPresent
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  input.spec.template.spec.containers[i].imagePullPolicy != "IfNotPresent"
+  msg := "imagePullPolicy must be IfNotPresent"
+}
+
 deny[msg] {
   input.kind == "Deployment"
   some i
