@@ -13,6 +13,11 @@ repos:
     rev: v1.35.1
     hooks:
       - id: yamllint
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        args: ["-r", "ops_bot", "-q"]
   - repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:

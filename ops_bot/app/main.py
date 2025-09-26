@@ -49,6 +49,11 @@ def root():
   return {"service": "DriftHawk Ops Bot", "endpoints": ["/chatops", "/change", "/healthz", "/livez", "/readyz", "/version"]}
 
 
+@app.get("/ping")
+def ping():
+  return {"pong": True}
+
+
 @app.get("/metrics")
 def metrics():
   return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
