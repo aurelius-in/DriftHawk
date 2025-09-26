@@ -31,7 +31,6 @@ def plan_brief(req: PlanBriefReq):
     brief_md = impact_brief_markdown(brief)
     return {"brief": brief, "markdown": brief_md}
 
-
 class PromoteReq(BaseModel):
     env: str
     rollout: str | None = None

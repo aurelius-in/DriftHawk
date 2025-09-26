@@ -21,5 +21,3 @@ def mirror_change(key: str, summary: str) -> Dict[str, str]:
     except Exception:
         pass
     return {"snow": "CHG0001"}
-
-

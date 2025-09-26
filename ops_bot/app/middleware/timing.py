@@ -19,6 +19,10 @@ class TimingMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         start = time.perf_counter()
+        try:
+            request.state.request_start_ms = int(time.time() * 1000)
+        except Exception:
+            request.state.request_start_ms = None
         response = await call_next(request)
         duration_ms = round((time.perf_counter() - start) * 1000, 2)
         req_id = getattr(request.state, "request_id", "-")
@@ -33,6 +37,8 @@ class TimingMiddleware(BaseHTTPMiddleware):
             pass
         try:
             response.headers["X-Request-Duration-ms"] = str(duration_ms)
+            if request.state.request_start_ms is not None:
+                response.headers["X-Request-Start"] = str(request.state.request_start_ms)
         except Exception:
             pass
         self.logger.info(

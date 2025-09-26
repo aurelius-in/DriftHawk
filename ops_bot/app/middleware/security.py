@@ -24,5 +24,3 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         )
         response.headers.setdefault("Server", "DriftHawk")
         return response
-
-
