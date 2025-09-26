@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "ipp-bad"},
+  "spec": {"template": {"spec": {"containers": [{"name": "c", "image": "ghcr.io/owner/app", "imagePullPolicy": "Always"}]}}}
+}
+

@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "bad-reg"},
+  "spec": {"template": {"spec": {"containers": [{"name": "c", "image": "docker.io/library/alpine"}]}}}
+}
+

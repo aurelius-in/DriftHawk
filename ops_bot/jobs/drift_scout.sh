@@ -6,10 +6,7 @@ terraform init -input=false
 terraform plan -refresh-only -no-color -out=tfplan | tee /tmp/refresh.txt || true
 terraform show -no-color tfplan >> /tmp/refresh.txt || true
 if grep -Eqi "(replace|update|destroy)" /tmp/refresh.txt; then
-  branch="fix/drift-$(date +%F)"
-  git checkout -b "$branch"
-  git commit --allow-empty -m "Drift: $(date +%F)"
-  gh pr create --title "Drift remediation $(date +%F)" --body "Auto-PR from Drift Scout"
+  gh issue create --title "Drift detected $(date +%F)" --body "See drift output in /tmp/refresh.txt. Please address on develop branch." || true
 fi
 
 

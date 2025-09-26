@@ -55,4 +55,99 @@ deny[msg] {
   msg := "hostPath volumes are not allowed"
 }
 
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.hostNetwork == true
+  msg := "hostNetwork is not allowed"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.hostPID == true
+  msg := "hostPID is not allowed"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.hostIPC == true
+  msg := "hostIPC is not allowed"
+}
+
+# Only allow images from ghcr.io
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not re_match("^ghcr\\.io/", input.spec.template.spec.containers[i].image)
+  msg := "Images must come from ghcr.io"
+}
+
+# Require imagePullPolicy IfNotPresent
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  input.spec.template.spec.containers[i].imagePullPolicy != "IfNotPresent"
+  msg := "imagePullPolicy must be IfNotPresent"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not input.spec.template.spec.containers[i].livenessProbe
+  msg := "livenessProbe is required"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not input.spec.template.spec.containers[i].readinessProbe
+  msg := "readinessProbe is required"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.securityContext.runAsUser
+  msg := "runAsUser must be set"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.securityContext.runAsUser < 10000
+  msg := "runAsUser must be >= 10000"
+}
+
+# Containers must not allow privilege escalation
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.containers[_].securityContext.allowPrivilegeEscalation == true
+  msg := "allowPrivilegeEscalation must be false"
+}
+
+# Containers must use readOnlyRootFilesystem
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.containers[_].securityContext.readOnlyRootFilesystem
+  msg := "readOnlyRootFilesystem must be set to true"
+}
+
+# Pod must set seccompProfile
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.securityContext.seccompProfile
+  msg := "Pod securityContext.seccompProfile must be set"
+}
+
+# Must not use default service account
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.serviceAccountName == "default"
+  msg := "Default service account is not allowed"
+}
+
+# ServiceAccount token should not be automounted at pod level
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.automountServiceAccountToken
+  msg := "automountServiceAccountToken must be false"
+}
+
 

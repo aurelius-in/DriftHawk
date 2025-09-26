@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "hp"},
+  "spec": {"template": {"spec": {"hostPID": true, "containers": [{"name": "c", "image": "alpine"}]}}}
+}
+

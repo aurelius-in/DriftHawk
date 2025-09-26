@@ -25,6 +25,9 @@ policy.test.build.staging:
 policy.test.build.prod:
 	kustomize build gitops/overlays/prod | conftest test -p policy/opa -
 
+policy.test.build.all:
+	$(MAKE) policy.test.build.dev && $(MAKE) policy.test.build.staging && $(MAKE) policy.test.build.prod
+
 tf.plan:
 	cd terraform/envs/$(ENV) && terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
 
@@ -49,6 +52,15 @@ tf.plan.prod:
 api.openapi:
 	curl -s http://localhost:8080/openapi.json > artifacts/openapi.json
 
+kustomize.build.dev:
+	kustomize build gitops/overlays/dev | tee /dev/null > /dev/null
+
+kustomize.build.staging:
+	kustomize build gitops/overlays/staging | tee /dev/null > /dev/null
+
+kustomize.build.prod:
+	kustomize build gitops/overlays/prod | tee /dev/null > /dev/null
+
 brief:
 	curl -s -X POST localhost:8080/chatops/plan-brief -H 'Content-Type: application/json' -d '{"env":"$(ENV)"}' | jq
 
@@ -67,6 +79,14 @@ redteam.run:
 drift.run:
 	bash ops_bot/jobs/drift_scout.sh
 
+tf.fmt.all:
+	terraform -chdir=terraform/envs/dev fmt -recursive && \
+	terraform -chdir=terraform/envs/staging fmt -recursive && \
+	terraform -chdir=terraform/envs/prod fmt -recursive
+
+docker.build.bot:
+	docker build -t drifthawk-ops-bot:dev -f Dockerfile.ops-bot .
+
 run.bot:
 	bash ops_bot/run.sh
 
@@ -76,6 +96,9 @@ lint.py:
 type.py:
 	mypy ops_bot
 
+clean:
+	rm -f artifacts/*.json artifacts/*-graph.png 2>/dev/null || true
+
 test.bot:
 	pytest -q
 
@@ -84,5 +107,11 @@ compose.up:
 
 compose.down:
 	docker compose down
+
+metrics.curl:
+	curl -s http://localhost:8080/metrics | head -n 5
+
+quality:
+	$(MAKE) lint.py && $(MAKE) type.py && $(MAKE) test.bot
 
 

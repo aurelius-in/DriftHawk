@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from ..connectors import jira, servicenow, slack
 from ..settings import settings
 
@@ -10,7 +10,7 @@ class ChangeRequest(BaseModel):
   env: str
   summary: str
   description: str
-  risk_score: float = 0.2
+  risk_score: float = Field(0.2, ge=0.0, le=1.0)
   plan_url: str | None = None
   approvers: list[str] = []
 

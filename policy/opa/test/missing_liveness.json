@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "no-live"},
+  "spec": {"template": {"spec": {"containers": [{"name": "c", "image": "alpine"}]}}}
+}
+

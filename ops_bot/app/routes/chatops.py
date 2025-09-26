@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from ..connectors import slack
 from ..utils.plan import load_plan, summarize_plan
 
 router = APIRouter()
@@ -29,6 +30,7 @@ class PromoteReq(BaseModel):
 
 @router.post("/promote")
 def promote(req: PromoteReq):
+  slack.post_message(f"Starting promotion to {req.env}")
   return {"status": "started", "env": req.env, "rollout_id": "rl-123"}
 
 

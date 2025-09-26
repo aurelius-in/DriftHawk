@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "default-sa"},
+  "spec": {"template": {"spec": {"serviceAccountName": "default", "containers": [{"name": "c", "image": "alpine"}]}}}
+}
+
