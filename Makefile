@@ -10,6 +10,18 @@ policy.test:
 tf.plan:
 	cd terraform/envs/$(ENV) && terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
 
+tf.plan.dev:
+	$(MAKE) tf.plan ENV=dev
+
+tf.plan.staging:
+	$(MAKE) tf.plan ENV=staging
+
+tf.plan.prod:
+	$(MAKE) tf.plan ENV=prod
+
+api.openapi:
+	curl -s http://localhost:8080/openapi.json > artifacts/openapi.json
+
 brief:
 	curl -s -X POST localhost:8080/chatops/plan-brief -H 'Content-Type: application/json' -d '{"env":"$(ENV)"}' | jq
 

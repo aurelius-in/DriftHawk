@@ -1,0 +1,13 @@
+ci:
+  - .github/workflows/**
+infra:
+  - terraform/**
+  - gitops/**
+bot:
+  - ops_bot/**
+policy:
+  - policy/**
+docs:
+  - README.md
+  - delivery-kit/**
+

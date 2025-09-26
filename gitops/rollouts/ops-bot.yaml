@@ -7,9 +7,16 @@ spec:
   template:
     metadata: { labels: { app: ops-bot }, annotations: { "cosign.sigstore.dev/verified": "true" } }
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile: { type: RuntimeDefault }
       containers:
         - name: ops-bot
           image: ghcr.io/OWNER/drifthawk-ops-bot:sha256-PINNED
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
           ports: [{ containerPort: 8080 }]
           livenessProbe:
             httpGet: { path: /livez, port: 8080 }

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import os
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import chatops, change
 from .utils.logging import get_logger
@@ -31,5 +32,10 @@ def livez():
 @app.get("/readyz")
 def readyz():
   return {"ready": True}
+
+
+@app.get("/version")
+def version():
+  return {"git_sha": os.getenv("GIT_SHA", "unknown")}
 
 

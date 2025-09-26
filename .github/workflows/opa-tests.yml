@@ -1,0 +1,10 @@
+name: opa-tests
+on: [pull_request]
+jobs:
+  conftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install conftest || pip install conftest || true
+      - run: conftest test -p policy/opa policy/opa/test/*.json
+
