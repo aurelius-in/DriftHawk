@@ -1,11 +1,11 @@
 ![DriftHawk Wordmark](dh_wordmark.png)
  
-[![terraform-fmt](https://github.com/aurelius-in/DriftHawk/actions/workflows/terraform-fmt.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/terraform-fmt.yml)
-[![kubeconform](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml)
-[![trivy-fs](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml)
-[![hadolint](https://github.com/aurelius-in/DriftHawk/actions/workflows/hadolint.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/hadolint.yml)
-[![mypy](https://github.com/aurelius-in/DriftHawk/actions/workflows/mypy.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/mypy.yml)
-[![openapi](https://github.com/aurelius-in/DriftHawk/actions/workflows/openapi.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/openapi.yml)
+[![terraform-fmt](https://github.com/aurelius-in/DriftHawk/actions/workflows/terraform-fmt.yml/badge.svg?branch=develop)](https://github.com/aurelius-in/DriftHawk/actions/workflows/terraform-fmt.yml)
+[![kubeconform](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml/badge.svg?branch=develop)](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml)
+[![trivy-fs](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml/badge.svg?branch=develop)](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml)
+[![hadolint](https://github.com/aurelius-in/DriftHawk/actions/workflows/hadolint.yml/badge.svg?branch=develop)](https://github.com/aurelius-in/DriftHawk/actions/workflows/hadolint.yml)
+[![mypy](https://github.com/aurelius-in/DriftHawk/actions/workflows/mypy.yml/badge.svg?branch=develop)](https://github.com/aurelius-in/DriftHawk/actions/workflows/mypy.yml)
+[![openapi](https://github.com/aurelius-in/DriftHawk/actions/workflows/openapi.yml/badge.svg?branch=develop)](https://github.com/aurelius-in/DriftHawk/actions/workflows/openapi.yml)
 # *Spot drift. Ship proof.*
 Provision and govern private-cloud and OpenShift with Terraform and Argo CD, enforce OPA policies, sign and attest supply chain, automate approvals via ChatOps, and continuously validate gates with a red-team harness.
 
