@@ -70,6 +70,11 @@ redteam.run:
 drift.run:
 	bash ops_bot/jobs/drift_scout.sh
 
+tf.fmt.all:
+	terraform -chdir=terraform/envs/dev fmt -recursive && \
+	terraform -chdir=terraform/envs/staging fmt -recursive && \
+	terraform -chdir=terraform/envs/prod fmt -recursive
+
 run.bot:
 	bash ops_bot/run.sh
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Response
 import os
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .routes import chatops, change
 from .utils.logging import get_logger
@@ -20,6 +21,7 @@ origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 allowed_hosts = os.getenv("ALLOWED_HOSTS", "*").split(",")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 app.include_router(chatops.router, prefix="/chatops")
 app.include_router(change.router, prefix="/change")
@@ -29,7 +31,7 @@ app.add_middleware(TimingMiddleware)
 
 @app.get("/healthz")
 def healthz():
-  return {"status": "ok"}
+  return {"status": "ok", "version": os.getenv("APP_VERSION", "0.1.0"), "git_sha": os.getenv("GIT_SHA", "unknown")}
 
 
 @app.get("/livez")
