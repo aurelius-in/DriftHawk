@@ -1,5 +1,9 @@
 name: opa-tests
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches: [develop]
+  workflow_dispatch:
 jobs:
   conftest:
     runs-on: ubuntu-latest
