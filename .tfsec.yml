@@ -4,3 +4,9 @@ config:
   terraform_directory: terraform/envs
   minimum_severity: MEDIUM
 soft_fail: false
+ignore:
+  # Justification: demo stub modules use null_resource for scaffolding
+  - code: AWS012
+    ignore_paths:
+      - terraform/modules/**
+    reason: "Null resources and placeholder modules in examples"
