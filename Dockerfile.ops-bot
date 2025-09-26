@@ -1,9 +1,9 @@
 FROM python:3.11-slim
 WORKDIR /app
-COPY ops-bot/requirements.txt .
+COPY ops_bot/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY ops-bot /app/ops-bot
+COPY ops_bot /app/ops_bot
 EXPOSE 8080
-CMD ["uvicorn","ops-bot.app.main:app","--host","0.0.0.0","--port","8080"]
+CMD ["uvicorn","ops_bot.app.main:app","--host","0.0.0.0","--port","8080"]
 
 

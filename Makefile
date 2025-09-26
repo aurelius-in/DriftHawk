@@ -19,6 +19,9 @@ argo.sync:
 graph:
 	bash tools/graph/graph.sh $(ENV)
 
+graph.win:
+	powershell -ExecutionPolicy Bypass -File tools/graph/graph.ps1 -Env $(ENV)
+
 redteam.run:
 	bash redteam/run_redteam.sh
 
@@ -26,6 +29,6 @@ drift.run:
 	bash ops-bot/jobs/drift_scout.sh
 
 run.bot:
-	bash ops-bot/run.sh
+	bash ops_bot/run.sh
 
 
