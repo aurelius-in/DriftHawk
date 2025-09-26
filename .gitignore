@@ -8,4 +8,5 @@ terraform/*.tfstate*
 *.sbom.json
 dist/
 node_modules/
+.venv/
 

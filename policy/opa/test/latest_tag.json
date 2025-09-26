@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "ops-bot"},
+  "spec": {"template": {"spec": {"containers": [{"name": "ops-bot", "image": "ghcr.io/org/app:latest"}]}}}
+}
+

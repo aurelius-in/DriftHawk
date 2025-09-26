@@ -20,6 +20,9 @@ spec:
             initialDelaySeconds: 3
             periodSeconds: 10
           envFrom: [{ secretRef: { name: ops-bot-secrets } }]
+          env:
+            - name: LOG_LEVEL
+              valueFrom: { configMapKeyRef: { name: ops-bot-config, key: LOG_LEVEL } }
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits:   { cpu: "500m", memory: "256Mi" }

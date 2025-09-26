@@ -12,6 +12,8 @@ jobs:
       - name: Syft SBOM
         uses: anchore/sbom-action@v0
         with: { image: ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }}, output-file: artifacts/sbom.spdx.json }
+      - uses: actions/upload-artifact@v4
+        with: { name: sbom, path: artifacts/sbom.spdx.json }
       - name: Grype scan
         uses: anchore/scan-action@v3
         with: { image: ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }}, fail-build: true }
