@@ -64,6 +64,17 @@ def metrics():
   return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
+@app.get("/headers")
+def headers(request: Request):
+  sanitized = {}
+  for k, v in request.headers.items():
+    lk = k.lower()
+    if "authorization" in lk or "cookie" in lk:
+      continue
+    sanitized[k] = v
+  return {"headers": sanitized}
+
+
 @app.middleware("http")
 async def count_requests_mw(request: Request, call_next):
   response = await call_next(request)
