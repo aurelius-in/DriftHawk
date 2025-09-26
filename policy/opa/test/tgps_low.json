@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "tgps-low"},
+  "spec": {"template": {"spec": {"terminationGracePeriodSeconds": 5, "containers": [{"name": "c", "image": "ghcr.io/o/app"}]}}}
+}
+

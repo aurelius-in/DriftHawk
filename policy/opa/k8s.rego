@@ -115,6 +115,28 @@ deny[msg] {
   msg := "runAsUser must be >= 10000"
 }
 
+# Drop all capabilities
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not input.spec.template.spec.containers[i].securityContext.capabilities
+  msg := "Container must drop all capabilities"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  input.spec.template.spec.containers[i].securityContext.capabilities.drop[_] != "ALL"
+  msg := "Capabilities drop must include ALL"
+}
+
+# Require minimum terminationGracePeriodSeconds
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.terminationGracePeriodSeconds < 10
+  msg := "terminationGracePeriodSeconds must be >= 10"
+}
+
 # Containers must not allow privilege escalation
 deny[msg] {
   input.kind == "Deployment"

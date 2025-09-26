@@ -3,6 +3,8 @@ kind: Kustomization
 commonLabels:
   app.kubernetes.io/part-of: drifthawk
   app.kubernetes.io/managed-by: gitops
+commonAnnotations:
+  app.kubernetes.io/version: prod
 resources:
   - ../../rollouts/ops-bot.yaml
   - ../../namespaces/prod/namespace.yaml

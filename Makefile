@@ -87,6 +87,12 @@ tf.fmt.all:
 docker.build.bot:
 	docker build -t drifthawk-ops-bot:dev -f Dockerfile.ops-bot .
 
+shellcheck.all:
+	shellcheck **/*.sh
+
+kustomize.build.all:
+	$(MAKE) kustomize.build.dev && $(MAKE) kustomize.build.staging && $(MAKE) kustomize.build.prod
+
 run.bot:
 	bash ops_bot/run.sh
 
