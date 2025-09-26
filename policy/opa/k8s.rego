@@ -16,4 +16,21 @@ deny[msg] {
   msg := "Require resource limits"
 }
 
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.containers[_].securityContext.privileged == true
+  msg := "Privileged containers are not allowed"
+}
+
+deny[msg] {
+  input.kind == "Service"
+  input.spec.type == "NodePort"
+  msg := "NodePort services are not allowed"
+}
+
+deny[msg] {
+  not input.spec.template.spec.containers[_].resources.requests
+  msg := "Require resource requests"
+}
+
 

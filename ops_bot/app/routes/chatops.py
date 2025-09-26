@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from ..utils.plan import load_plan, summarize_plan
 
 router = APIRouter()
 
@@ -11,7 +12,14 @@ class PlanBriefReq(BaseModel):
 
 @router.post("/plan-brief")
 def plan_brief(req: PlanBriefReq):
-  return {"impact": "low", "blast_radius": "ipam->lb->proxy", "cost_delta": "$12/mo", "risk": 0.12}
+  brief = {"impact": "low", "blast_radius": "ipam->lb->proxy", "cost_delta": "$12/mo", "risk": 0.12}
+  try:
+    plan = load_plan("artifacts/plan.json")
+    s = summarize_plan(plan)
+    brief |= {"risk": s["risk"], "total_changes": s["total_changes"], "adds": s["adds"], "updates": s["updates"], "destroys": s["destroys"]}
+  except Exception:
+    pass
+  return brief
 
 
 class PromoteReq(BaseModel):
