@@ -31,6 +31,10 @@ class TimingMiddleware(BaseHTTPMiddleware):
             ).observe(duration_ms)
         except Exception:
             pass
+        try:
+            response.headers["X-Request-Duration-ms"] = str(duration_ms)
+        except Exception:
+            pass
         self.logger.info(
             "request_id=%s client_ip=%s duration_ms=%s",
             req_id,

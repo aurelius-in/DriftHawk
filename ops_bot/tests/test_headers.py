@@ -11,4 +11,8 @@ def test_headers_sanitized():
     data = r.json()["headers"]
     assert "X-Demo" in data
     assert "Authorization" not in data and "authorization" not in data
+    # response timing header exists on another endpoint
+    r2 = client.get("/ping")
+    assert r2.status_code == 200
+    assert "X-Request-Duration-ms" in r2.headers
 
