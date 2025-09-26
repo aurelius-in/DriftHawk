@@ -75,6 +75,9 @@ tf.fmt.all:
 	terraform -chdir=terraform/envs/staging fmt -recursive && \
 	terraform -chdir=terraform/envs/prod fmt -recursive
 
+docker.build.bot:
+	docker build -t drifthawk-ops-bot:dev -f Dockerfile.ops-bot .
+
 run.bot:
 	bash ops_bot/run.sh
 
