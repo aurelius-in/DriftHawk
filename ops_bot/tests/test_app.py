@@ -133,10 +133,22 @@ def test_info_and_security_headers():
     # math
     assert client.post("/math/add", json={"a": 2, "b": 3}).json()["result"] == 5.0
     assert client.post("/math/mul", json={"a": 2, "b": 3}).json()["result"] == 6.0
+    assert client.post("/math/sub", json={"a": 5, "b": 3}).json()["result"] == 2.0
+    assert client.post("/math/div", json={"a": 6, "b": 3}).json()["result"] == 2.0
     # text helpers
     assert client.post("/palindrome", json={"text": "Level"}).json()["is_palindrome"] is True
     assert client.post("/length", json={"text": "abc"}).json()["length"] == 3
     assert client.post("/trim", json={"text": "  hi  "}).json()["text"] == "hi"
+    # string helpers
+    assert client.post("/string/count", json={"text": "banana", "substr": "na"}).json()["count"] == 2
+    assert client.post("/string/slug", json={"text": "Hello, World!"}).json()["slug"] == "hello-world"
+    # echo/query
+    assert client.get("/echo/query", params={"message": "yo"}).json()["message"] == "yo"
+    # now/env/all/headers/plain
+    assert client.get("/now").status_code == 200
+    assert client.get("/env/all").status_code == 200
+    rp = client.get("/headers/plain", headers={"X-Demo": "ok"})
+    assert rp.status_code == 200 and "X-Demo: ok" in rp.text
     # datetime, uuids, randfloat, GET uppercase, routes filter
     r = client.get("/datetime")
     assert r.status_code == 200 and "epoch_ms" in r.json()
