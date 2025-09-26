@@ -3,12 +3,13 @@ kind: Kustomization
 resources:
   - ../../rollouts/ops-bot.yaml
   - ../../namespaces/dev/namespace.yaml
+  - ../../network/ops-bot-netpol.yaml
 images:
   - name: ghcr.io/OWNER/drifthawk-ops-bot
     newTag: sha256:PINNED_DIGEST
 configMapGenerator:
   - name: ops-bot-config
     literals:
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=DEBUG
 
 

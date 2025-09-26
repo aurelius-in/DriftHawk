@@ -1,0 +1,10 @@
+.git
+.github
+artifacts
+node_modules
+__pycache__
+*.pyc
+*.sbom.json
+*.plan
+terraform/.terraform
+

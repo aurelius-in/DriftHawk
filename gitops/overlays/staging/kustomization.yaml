@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../../rollouts/ops-bot.yaml
   - ../../namespaces/staging/namespace.yaml
+  - ../../network/ops-bot-netpol.yaml
 images:
   - name: ghcr.io/OWNER/drifthawk-ops-bot
     newTag: sha256:PINNED_DIGEST
