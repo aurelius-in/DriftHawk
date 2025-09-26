@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Response
 import os
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .routes import chatops, change
 from .utils.logging import get_logger
 from .middleware.request_id import RequestIdMiddleware
@@ -17,6 +18,8 @@ request_counter = Counter("ops_bot_requests_total", "Total HTTP requests", ["pat
 
 origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+allowed_hosts = os.getenv("ALLOWED_HOSTS", "*").split(",")
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
 
 app.include_router(chatops.router, prefix="/chatops")
 app.include_router(change.router, prefix="/change")
@@ -67,5 +70,21 @@ async def count_requests_mw(request: Request, call_next):
   except Exception:
     pass
   return response
+
+
+@app.on_event("startup")
+async def on_startup():
+  logger.info("app_startup version=%s git_sha=%s", os.getenv("APP_VERSION", "0.1.0"), os.getenv("GIT_SHA", "unknown"))
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+  logger.info("app_shutdown")
+
+
+@app.exception_handler(Exception)
+async def handle_exceptions(request: Request, exc: Exception):
+  logger.error("unhandled_exception request_id=%s path=%s err=%s", getattr(request.state, "request_id", "-"), request.url.path, repr(exc))
+  return Response(content="Internal Server Error", status_code=500)
 
 

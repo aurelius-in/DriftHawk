@@ -61,6 +61,44 @@ deny[msg] {
   msg := "hostNetwork is not allowed"
 }
 
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.hostPID == true
+  msg := "hostPID is not allowed"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.hostIPC == true
+  msg := "hostIPC is not allowed"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not input.spec.template.spec.containers[i].livenessProbe
+  msg := "livenessProbe is required"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not input.spec.template.spec.containers[i].readinessProbe
+  msg := "readinessProbe is required"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.securityContext.runAsUser
+  msg := "runAsUser must be set"
+}
+
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.securityContext.runAsUser < 10000
+  msg := "runAsUser must be >= 10000"
+}
+
 # Containers must not allow privilege escalation
 deny[msg] {
   input.kind == "Deployment"

@@ -10,6 +10,7 @@ spec:
       securityContext:
         runAsNonRoot: true
         seccompProfile: { type: RuntimeDefault }
+        runAsUser: 10001
       automountServiceAccountToken: false
       serviceAccountName: ops-bot-sa
       containers:
