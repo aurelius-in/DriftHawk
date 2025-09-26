@@ -73,6 +73,14 @@ deny[msg] {
   msg := "hostIPC is not allowed"
 }
 
+# Only allow images from ghcr.io
+deny[msg] {
+  input.kind == "Deployment"
+  some i
+  not re_match("^ghcr\\.io/", input.spec.template.spec.containers[i].image)
+  msg := "Images must come from ghcr.io"
+}
+
 deny[msg] {
   input.kind == "Deployment"
   some i

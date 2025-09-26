@@ -136,6 +136,12 @@ pip install -r ops_bot/requirements-dev.txt
 make test.bot
 ```
 
+## Quality checks
+
+```bash
+make quality   # runs flake8, mypy, and pytest
+```
+
 ## Configuration
 
 Populate `ops-bot/.env` or GitHub Actions secrets:

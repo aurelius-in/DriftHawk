@@ -10,6 +10,8 @@ resources:
   - ../../rollouts/ops-bot-hpa.yaml
   - ../../rollouts/ops-bot-sa.yaml
   - ../../rollouts/ops-bot-pdb.yaml
+  - ./resourcequota.yaml
+  - ./limitrange.yaml
 images:
   - name: ghcr.io/OWNER/drifthawk-ops-bot
     newTag: sha256:PINNED_DIGEST

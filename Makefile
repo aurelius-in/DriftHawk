@@ -52,6 +52,15 @@ tf.plan.prod:
 api.openapi:
 	curl -s http://localhost:8080/openapi.json > artifacts/openapi.json
 
+kustomize.build.dev:
+	kustomize build gitops/overlays/dev | tee /dev/null > /dev/null
+
+kustomize.build.staging:
+	kustomize build gitops/overlays/staging | tee /dev/null > /dev/null
+
+kustomize.build.prod:
+	kustomize build gitops/overlays/prod | tee /dev/null > /dev/null
+
 brief:
 	curl -s -X POST localhost:8080/chatops/plan-brief -H 'Content-Type: application/json' -d '{"env":"$(ENV)"}' | jq
 
