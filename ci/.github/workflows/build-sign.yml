@@ -1,0 +1,33 @@
+name: build-sign
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }} -f Dockerfile.ops-bot .
+      - name: Login GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - run: docker push ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }}
+      - name: Syft SBOM
+        uses: anchore/sbom-action@v0
+        with: { image: ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }}, output-file: artifacts/sbom.spdx.json }
+      - name: Grype scan
+        uses: anchore/scan-action@v3
+        with: { image: ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }}, fail-build: true }
+      - name: Cosign install
+        uses: sigstore/cosign-installer@v3
+      - id: digest
+        run: echo "digest=$(docker inspect ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }} --format='{{index .RepoDigests 0}}' | cut -d'@' -f2)" >> $GITHUB_OUTPUT
+      - name: Cosign sign
+        run: cosign sign --key env://COSIGN_PRIVATE_KEY ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot@${{ steps.digest.outputs.digest }}
+        env: { COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}, COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }} }
+      - name: Cosign verify
+        run: cosign verify --key env://COSIGN_PUBLIC_KEY ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot@${{ steps.digest.outputs.digest }}
+        env: { COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }} }
+      - name: Persist pinned digest for Kustomize
+        run: |
+          sed -i "s/sha256:PINNED_DIGEST/${{ steps.digest.outputs.digest }}/g" gitops/overlays/dev/kustomization.yaml
+          git diff || true
+
+

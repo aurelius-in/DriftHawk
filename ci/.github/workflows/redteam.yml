@@ -1,0 +1,13 @@
+name: redteam
+on: { schedule: [{ cron: "0 4 * * 1" }], workflow_dispatch: {} }
+jobs:
+  chaos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install conftest || pip install conftest || true
+      - run: bash redteam/run_redteam.sh
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: { commit_message: "docs: red-team report", file_pattern: "redteam/reports/**" }
+
+

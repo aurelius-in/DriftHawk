@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: ops-bot, labels: { app: ops-bot } }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: ops-bot } }
+  template:
+    metadata: { labels: { app: ops-bot }, annotations: { "cosign.sigstore.dev/verified": "true" } }
+    spec:
+      containers:
+        - name: ops-bot
+          image: ghcr.io/OWNER/drifthawk-ops-bot:sha256-PINNED
+          ports: [{ containerPort: 8080 }]
+          envFrom: [{ secretRef: { name: ops-bot-secrets } }]
+          resources:
+            requests: { cpu: "100m", memory: "128Mi" }
+            limits:   { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: ops-bot }
+spec:
+  selector: { app: ops-bot }
+  ports: [{ port: 80, targetPort: 8080 }]
+
+

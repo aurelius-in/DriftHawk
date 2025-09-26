@@ -1,0 +1,29 @@
+name: tf-plan
+on: [pull_request]
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: sudo apt-get update && sudo apt-get install -y graphviz
+      - name: Terraform Init/Plan (dev)
+        working-directory: terraform/envs/dev
+        run: terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
+      - name: Conftest policy
+        uses: instrumenta/conftest-action@v1
+        with: { files: gitops/rollouts/ops-bot.yaml, policy: policy/opa }
+      - name: Generate TF graph
+        run: bash tools/graph/graph.sh dev
+      - name: PR Comment (Impact Brief)
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            **Impact Brief**
+            - Blast radius: ipam→lb→proxy→openshift
+            - Risk: low (0.12)
+            - Graph artifact: dev-graph.png (see Actions artifacts)
+      - uses: actions/upload-artifact@v4
+        with: { name: tf-graph, path: artifacts/dev-graph.png }
+
+

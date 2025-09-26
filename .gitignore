@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+artifacts/*
+!.keep
+terraform/.terraform/
+terraform/*.tfstate*
+*.sbom.json
+dist/
+node_modules/
+

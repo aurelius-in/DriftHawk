@@ -1,0 +1,13 @@
+name: infracost
+on: [pull_request]
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: infracost/actions/setup@v3
+      - run: infracost breakdown --path=terraform/envs/dev --format=json --out-file=/tmp/base.json
+      - run: infracost diff --path=terraform/envs/dev --compare-to=/tmp/base.json --show-skipped --format=github-comment
+        env: { INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }} }
+
+
