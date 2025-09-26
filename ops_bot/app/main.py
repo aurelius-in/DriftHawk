@@ -1,13 +1,15 @@
-from fastapi import FastAPI, Request, Response
 import os
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, generate_latest
 from starlette.middleware.trustedhost import TrustedHostMiddleware
-from .routes import chatops, change
-from .utils.logging import get_logger
+
 from .middleware.request_id import RequestIdMiddleware
 from .middleware.timing import TimingMiddleware
+from .routes import chatops, change
+from .utils.logging import get_logger
 
 app = FastAPI(
   title="DriftHawk Ops Bot",
