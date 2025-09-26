@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }} -f Dockerfile.ops-bot .
+      - run: docker build --build-arg GIT_SHA=${{ github.sha }} -t ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }} -f Dockerfile.ops-bot .
       - name: Login GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - run: docker push ghcr.io/${{ github.repository_owner }}/drifthawk-ops-bot:${{ github.sha }}

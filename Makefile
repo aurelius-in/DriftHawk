@@ -10,6 +10,15 @@ policy.test:
 tf.plan:
 	cd terraform/envs/$(ENV) && terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
 
+tf.fmt:
+	terraform -chdir=terraform/envs/$(ENV) fmt -recursive
+
+tf.validate:
+	terraform -chdir=terraform/envs/$(ENV) init -input=false && terraform -chdir=terraform/envs/$(ENV) validate
+
+k8s.validate:
+	kubeconform -strict -summary -ignore-missing-schemas gitops/**/*.yaml
+
 tf.plan.dev:
 	$(MAKE) tf.plan ENV=dev
 
