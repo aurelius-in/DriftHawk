@@ -24,4 +24,3 @@ def summarize_plan(plan: Dict[str, Any]) -> Dict[str, Any]:
         "risk": risk,
     }
 
-

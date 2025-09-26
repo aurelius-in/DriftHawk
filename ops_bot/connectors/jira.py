@@ -2,7 +2,7 @@ from __future__ import annotations
 import base64
 from typing import Optional
 import httpx
-from ..app.settings import settings
+from ops_bot.app.settings import settings
 
 
 def _auth_header(user: Optional[str], token: Optional[str]) -> dict[str, str]:
@@ -29,8 +29,9 @@ def create_change(summary: str, description: str, risk: float, plan_url: Optiona
         with httpx.Client(timeout=10) as client:
             resp = client.post(url, json=payload, headers=headers)
             if resp.status_code // 100 == 2:
-                key = resp.json().get("key", "CHG-123")
-                return key
+                key = resp.json().get("key")
+                if isinstance(key, str) and key:
+                    return key
     except Exception:
         pass
     return "CHG-123"

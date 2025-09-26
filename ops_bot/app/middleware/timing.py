@@ -24,10 +24,17 @@ class TimingMiddleware(BaseHTTPMiddleware):
         req_id = getattr(request.state, "request_id", "-")
         client_ip = request.client.host if request.client else "-"
         try:
-            self.duration_histogram.labels(request.url.path, request.method, str(response.status_code)).observe(duration_ms)
+            self.duration_histogram.labels(
+                request.url.path,
+                request.method,
+                str(response.status_code),
+            ).observe(duration_ms)
         except Exception:
             pass
-        self.logger.info("request_id=%s client_ip=%s duration_ms=%s", req_id, client_ip, duration_ms)
+        self.logger.info(
+            "request_id=%s client_ip=%s duration_ms=%s",
+            req_id,
+            client_ip,
+            duration_ms,
+        )
         return response
-
-

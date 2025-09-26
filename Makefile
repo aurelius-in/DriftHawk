@@ -96,6 +96,9 @@ kustomize.build.all:
 run.bot:
 	bash ops_bot/run.sh
 
+run.bot.win:
+	powershell -ExecutionPolicy Bypass -File ops_bot/run.ps1
+
 lint.py:
 	flake8 ops_bot
 
@@ -119,5 +122,13 @@ metrics.curl:
 
 quality:
 	$(MAKE) lint.py && $(MAKE) type.py && $(MAKE) test.bot
+
+quality.win:
+	powershell -NoProfile -ExecutionPolicy Bypass -Command \
+	".\.venv\Scripts\python -m pip install -U pip; \
+	 .\.venv\Scripts\python -m pip install -r ops_bot/requirements.txt -r ops_bot/requirements-dev.txt; \
+	 .\.venv\Scripts\python -m flake8 ops_bot; \
+	 .\.venv\Scripts\python -m mypy ops_bot; \
+	 .\.venv\Scripts\python -m pytest -q"
 
 

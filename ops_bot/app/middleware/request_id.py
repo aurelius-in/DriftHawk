@@ -16,7 +16,11 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
         request.state.request_id = req_id
         response = await call_next(request)
         response.headers["X-Request-ID"] = req_id
-        self.logger.info("request_id=%s method=%s path=%s status=%s", req_id, request.method, request.url.path, response.status_code)
+        self.logger.info(
+            "request_id=%s method=%s path=%s status=%s",
+            req_id,
+            request.method,
+            request.url.path,
+            response.status_code,
+        )
         return response
-
-
