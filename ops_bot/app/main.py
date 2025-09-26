@@ -4,11 +4,13 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, generate_latest
+import time
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .middleware.request_id import RequestIdMiddleware
 from .middleware.timing import TimingMiddleware
 from .routes import chatops, change
+from .middleware.security import SecurityHeadersMiddleware
 from .utils.logging import get_logger
 
 app = FastAPI(
@@ -18,6 +20,7 @@ app = FastAPI(
 )
 logger = get_logger(__name__)
 request_counter = Counter("ops_bot_requests_total", "Total HTTP requests", ["path", "method", "status"])
+START_TIME = time.time()
 
 origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
@@ -35,6 +38,7 @@ app.include_router(chatops.router, prefix="/chatops")
 app.include_router(change.router, prefix="/change")
 app.add_middleware(RequestIdMiddleware)
 app.add_middleware(TimingMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
 
 
 @app.get("/healthz")
@@ -72,6 +76,69 @@ def root():
 @app.get("/ping")
 def ping():
     return {"pong": True}
+
+
+@app.head("/ping")
+def ping_head():
+    return Response(status_code=200)
+
+
+@app.get("/info")
+def info():
+    return {
+        "service": "DriftHawk Ops Bot",
+        "version": os.getenv("APP_VERSION", "0.1.0"),
+        "git_sha": os.getenv("GIT_SHA", "unknown"),
+        "startup_time": int(START_TIME),
+    }
+
+
+@app.get("/robots.txt")
+def robots():
+    return Response("User-agent: *\nDisallow: /\n", media_type="text/plain; charset=utf-8")
+
+
+@app.get("/env")
+def env():
+    return {
+        "log_level": os.getenv("LOG_LEVEL", "INFO"),
+        "allowed_hosts": os.getenv("ALLOWED_HOSTS", "*").split(","),
+    }
+
+
+@app.get("/uptime")
+def uptime():
+    return {"uptime_seconds": int(time.time() - START_TIME)}
+
+
+@app.head("/healthz")
+def healthz_head():
+    return Response(status_code=200)
+
+
+@app.head("/readyz")
+def readyz_head():
+    return Response(status_code=200)
+
+
+from pydantic import BaseModel  # noqa: E402
+
+
+class EchoBody(BaseModel):  # noqa: E402
+    message: str
+
+
+@app.post("/echo")
+def echo(body: EchoBody):
+    return {"echo": body.message}
+
+
+@app.get("/flags")
+def flags():
+    return {
+        "enable_metrics": True,
+        "enable_slack": bool(os.getenv("SLACK_WEBHOOK_URL")),
+    }
 
 
 @app.get("/metrics")

@@ -21,6 +21,7 @@ configMapGenerator:
   - name: ops-bot-config
     literals:
       - LOG_LEVEL=INFO
+      - LOG_FORMAT=text
 secretGenerator:
   - name: ops-bot-secrets
     literals:

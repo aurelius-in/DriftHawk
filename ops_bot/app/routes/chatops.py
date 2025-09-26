@@ -24,6 +24,7 @@ def plan_brief(req: PlanBriefReq):
             "adds": s["adds"],
             "updates": s["updates"],
             "destroys": s["destroys"],
+            "risk_level": s["risk_level"],
         }
     except Exception:
         pass

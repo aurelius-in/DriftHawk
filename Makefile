@@ -52,6 +52,9 @@ tf.plan.prod:
 api.openapi:
 	curl -s http://localhost:8080/openapi.json > artifacts/openapi.json
 
+api.openapi.win:
+	powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -UseBasicParsing http://localhost:8080/openapi.json -OutFile artifacts/openapi.json"
+
 kustomize.build.dev:
 	kustomize build gitops/overlays/dev | tee /dev/null > /dev/null
 

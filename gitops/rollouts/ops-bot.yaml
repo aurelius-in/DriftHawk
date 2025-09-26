@@ -49,6 +49,8 @@ spec:
           env:
             - name: LOG_LEVEL
               valueFrom: { configMapKeyRef: { name: ops-bot-config, key: LOG_LEVEL } }
+            - name: LOG_FORMAT
+              valueFrom: { configMapKeyRef: { name: ops-bot-config, key: LOG_FORMAT } }
           resources:
             requests: { cpu: "100m", memory: "128Mi" }
             limits:   { cpu: "500m", memory: "256Mi" }
