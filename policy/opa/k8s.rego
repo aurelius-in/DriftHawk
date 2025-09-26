@@ -55,4 +55,10 @@ deny[msg] {
   msg := "hostPath volumes are not allowed"
 }
 
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.hostNetwork == true
+  msg := "hostNetwork is not allowed"
+}
+
 

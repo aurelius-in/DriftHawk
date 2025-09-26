@@ -6,6 +6,7 @@ resources:
   - ../../rollouts/ops-bot.yaml
   - ../../namespaces/dev/namespace.yaml
   - ../../network/ops-bot-netpol.yaml
+  - ../../rollouts/ops-bot-hpa.yaml
 images:
   - name: ghcr.io/OWNER/drifthawk-ops-bot
     newTag: sha256:PINNED_DIGEST
@@ -17,5 +18,11 @@ secretGenerator:
   - name: ops-bot-secrets
     literals:
       - PLACEHOLDER=1
+patches:
+  - target: { kind: Deployment, name: ops-bot }
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
 
 
