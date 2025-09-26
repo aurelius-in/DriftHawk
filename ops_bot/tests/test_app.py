@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 from ops_bot.app.main import app
 
 
-client = TestClient(app)
+client = TestClient(app, raise_server_exceptions=False)
 
 
 def test_healthz():
@@ -102,6 +102,10 @@ def test_info_and_security_headers():
     enc = client.post("/b64", json={"text": "hi", "mode": "encode"}).json()["result"]
     dec = client.post("/b64", json={"text": enc, "mode": "decode"}).json()["result"]
     assert dec == "hi"
+    # urlsafe b64
+    enc2 = client.post("/b64", json={"text": "/+a=", "mode": "encode", "urlsafe": True}).json()["result"]
+    dec2 = client.post("/b64", json={"text": enc2, "mode": "decode", "urlsafe": True}).json()["result"]
+    assert dec2 == "/+a="
     # randint
     r = client.get("/randint", params={"min": 1, "max": 2})
     assert r.status_code == 200 and r.json()["value"] in (1, 2)
@@ -113,4 +117,18 @@ def test_info_and_security_headers():
     assert r.status_code == 200 and "routes" in r.json()
     r = client.get("/tz")
     assert r.status_code == 200 and "iso" in r.json()
+    # datetime, uuids, randfloat, GET uppercase, routes filter
+    r = client.get("/datetime")
+    assert r.status_code == 200 and "epoch_ms" in r.json()
+    r = client.get("/uuids", params={"count": 3})
+    assert r.status_code == 200 and len(r.json().get("uuids", [])) == 3
+    r = client.get("/randfloat", params={"min": 0.1, "max": 0.2})
+    assert r.status_code == 200 and 0.1 <= r.json()["value"] <= 0.2
+    r = client.get("/uppercase", params={"text": "abc"})
+    assert r.status_code == 200 and r.json()["text"] == "ABC"
+    r = client.get("/routes", params={"prefix": "/health"})
+    assert r.status_code == 200 and "routes" in r.json()
+    # error endpoint
+    r = client.get("/error")
+    assert r.status_code == 500
 

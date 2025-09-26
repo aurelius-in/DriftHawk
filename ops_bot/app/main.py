@@ -28,6 +28,7 @@ app = FastAPI(
 )
 logger = get_logger(__name__)
 request_counter = Counter("ops_bot_requests_total", "Total HTTP requests", ["path", "method", "status"])
+error_counter = Counter("ops_bot_errors_total", "Total unhandled errors", ["path"])
 START_TIME = time.time()
 
 origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
@@ -37,7 +38,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["X-Request-ID", "X-Request-Duration-ms"],
+    expose_headers=["X-Request-ID", "X-Request-Duration-ms", "X-Request-Start", "X-Trace-Id"],
 )
 allowed_hosts = os.getenv("ALLOWED_HOSTS", "*").split(",")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
@@ -242,7 +243,7 @@ class HashBody(BaseModel):  # noqa: E402
 @app.post("/hash")
 def hash_text(body: HashBody):
     algo = (body.algorithm or "sha256").lower()
-    if algo not in {"sha256", "sha1", "md5"}:
+    if algo not in {"sha256", "sha1", "md5", "sha512"}:
         raise StarletteHTTPException(status_code=422, detail="unsupported algorithm")
     h = hashlib.new(algo)
     h.update(body.text.encode("utf-8"))
@@ -271,6 +272,7 @@ def reverse(body: TextBody):
 class B64Body(BaseModel):  # noqa: E402
     text: str
     mode: str = "encode"
+    urlsafe: bool | None = False
 
 
 @app.post("/b64")
@@ -278,10 +280,14 @@ def b64(body: B64Body):
     if body.mode not in {"encode", "decode"}:
         raise StarletteHTTPException(status_code=422, detail="mode must be encode or decode")
     if body.mode == "encode":
-        out = base64.b64encode(body.text.encode("utf-8")).decode("ascii")
+        raw = body.text.encode("utf-8")
+        out_bytes = base64.urlsafe_b64encode(raw) if body.urlsafe else base64.b64encode(raw)
+        out = out_bytes.decode("ascii")
     else:
         try:
-            out = base64.b64decode(body.text).decode("utf-8")
+            data = body.text.encode("ascii")
+            out_bytes = base64.urlsafe_b64decode(data) if body.urlsafe else base64.b64decode(data)
+            out = out_bytes.decode("utf-8")
         except Exception:
             raise StarletteHTTPException(status_code=422, detail="invalid base64 input")
     return {"result": out}
@@ -307,12 +313,12 @@ def sleep_route(body: SleepBody):
 
 
 @app.get("/routes")
-def routes():
+def routes(prefix: str | None = None):
     items: list[dict[str, str]] = []
     for r in app.router.routes:
         path = getattr(r, "path", "")
         methods = ",".join(sorted(getattr(r, "methods", set())))
-        if path:
+        if path and (prefix is None or path.startswith(prefix)):
             items.append({"path": path, "methods": methods})
     return {"routes": items}
 
@@ -321,6 +327,39 @@ def routes():
 def tz():
     now = datetime.now(timezone.utc)
     return {"epoch": int(now.timestamp()), "iso": now.isoformat()}
+
+
+@app.get("/datetime")
+def current_datetime():
+    now = datetime.now(timezone.utc)
+    return {
+        "iso": now.isoformat(),
+        "epoch": int(now.timestamp()),
+        "epoch_ms": int(now.timestamp() * 1000),
+    }
+
+
+@app.get("/uuids")
+def uuids(count: int = 5):
+    count = max(1, min(50, count))
+    return {"uuids": [str(_uuid.uuid4()) for _ in range(count)]}
+
+
+@app.get("/randfloat")
+def randfloat(min: float = 0.0, max: float = 1.0):  # noqa: A002
+    if min > max:
+        raise StarletteHTTPException(status_code=422, detail="min must be <= max")
+    return {"value": random.uniform(min, max)}
+
+
+@app.get("/uppercase")
+def uppercase_get(text: str):
+    return {"text": text.upper()}
+
+
+@app.get("/error")
+def error_route():
+    raise RuntimeError("intentional error for testing")
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -401,4 +440,8 @@ async def handle_exceptions(request: Request, exc: Exception):
         request.url.path,
         repr(exc),
     )
+    try:
+        error_counter.labels(request.url.path).inc()
+    except Exception:
+        pass
     return Response(content="Internal Server Error", status_code=500)
