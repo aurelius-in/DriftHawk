@@ -20,7 +20,13 @@ logger = get_logger(__name__)
 request_counter = Counter("ops_bot_requests_total", "Total HTTP requests", ["path", "method", "status"])
 
 origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
-app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 allowed_hosts = os.getenv("ALLOWED_HOSTS", "*").split(",")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
 app.add_middleware(GZipMiddleware, minimum_size=500)
@@ -75,12 +81,16 @@ def metrics():
 
 @app.get("/headers")
 def headers(request: Request):
+    def header_title_case(name: str) -> str:
+        parts = name.split("-")
+        return "-".join(p[:1].upper() + p[1:].lower() for p in parts if p)
+
     sanitized: dict[str, str] = {}
     for k, v in request.headers.items():
         lk = k.lower()
         if "authorization" in lk or "cookie" in lk:
             continue
-        sanitized[k] = v
+        sanitized[header_title_case(lk)] = v
     return {"headers": sanitized}
 
 
@@ -113,5 +123,3 @@ async def handle_exceptions(request: Request, exc: Exception):
         repr(exc),
     )
     return Response(content="Internal Server Error", status_code=500)
-
-
