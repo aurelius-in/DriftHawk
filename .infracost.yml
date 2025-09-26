@@ -1,0 +1,6 @@
+version: 0.1
+projects:
+  - path: terraform/envs/dev
+  - path: terraform/envs/staging
+  - path: terraform/envs/prod
+

@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "hp"},
+  "spec": {"template": {"spec": {"volumes": [{"name": "h", "hostPath": {"path": "/etc"}}], "containers": [{"name": "c", "image": "alpine"}]}}}
+}
+

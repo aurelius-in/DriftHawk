@@ -9,6 +9,7 @@ class Settings(BaseSettings):
   snow_user: str | None = None
   snow_token: str | None = None
   infracost_api_key: str | None = None
+  slack_webhook_url: str | None = None
 
   class Config:
     env_file = ".env"

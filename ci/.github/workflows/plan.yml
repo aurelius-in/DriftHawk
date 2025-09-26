@@ -25,5 +25,7 @@ jobs:
             - Graph artifact: dev-graph.png (see Actions artifacts)
       - uses: actions/upload-artifact@v4
         with: { name: tf-graph, path: artifacts/dev-graph.png }
+      - uses: actions/upload-artifact@v4
+        with: { name: tf-plan, path: artifacts/plan.json }
 
 

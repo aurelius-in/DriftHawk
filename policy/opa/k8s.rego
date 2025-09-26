@@ -49,4 +49,10 @@ deny[msg] {
   msg := "Deployment must set runAsNonRoot=true"
 }
 
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.volumes[_].hostPath
+  msg := "hostPath volumes are not allowed"
+}
+
 

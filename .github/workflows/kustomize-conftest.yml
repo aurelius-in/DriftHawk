@@ -1,0 +1,17 @@
+name: kustomize-conftest
+on: [pull_request]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kustomize
+        run: |
+          curl -sLo kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz
+          tar xzf kustomize.tar.gz
+          sudo mv kustomize /usr/local/bin/
+      - name: Build dev overlay
+        run: kustomize build gitops/overlays/dev > /tmp/dev.yaml
+      - name: Conftest policy
+        run: conftest test /tmp/dev.yaml -p policy/opa
+
