@@ -76,6 +76,9 @@ lint.py:
 type.py:
 	mypy ops_bot
 
+clean:
+	rm -f artifacts/*.json artifacts/*-graph.png 2>/dev/null || true
+
 test.bot:
 	pytest -q
 

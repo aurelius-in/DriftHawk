@@ -1,5 +1,11 @@
 name: openapi
-on: [workflow_dispatch]
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ develop ]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   export:
     runs-on: ubuntu-latest
