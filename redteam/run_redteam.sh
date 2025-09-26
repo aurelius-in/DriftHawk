@@ -9,5 +9,7 @@ cat redteam/supply_chain/unsigned_images.txt
 
 mkdir -p redteam/reports/$(date +%F)
 echo "# Red-Team Report $(date +%F)" > redteam/reports/$(date +%F)/infra-chaos.md
+echo "Expect OPA to block resources without namespace..."
+conftest test redteam/rollout/missing_namespace.yaml -p policy/opa && { echo "ERROR: policy allowed missing namespace"; exit 1; } || echo "OK: namespace policy blocked"
 
 

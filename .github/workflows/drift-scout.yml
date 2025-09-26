@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-      - run: bash ops-bot/jobs/drift_scout.sh
+      - run: bash ops_bot/jobs/drift_scout.sh
         env: { GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
 
 

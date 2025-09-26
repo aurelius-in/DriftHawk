@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import chatops, change
+from .utils.logging import get_logger
 
 app = FastAPI(title="DriftHawk Ops Bot")
+logger = get_logger(__name__)
 
 app.add_middleware(
   CORSMiddleware,

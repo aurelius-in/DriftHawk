@@ -33,4 +33,14 @@ deny[msg] {
   msg := "Require resource requests"
 }
 
+deny[msg] {
+  not input.metadata.namespace
+  msg := "Namespace must be set"
+}
+
+deny[msg] {
+  input.metadata.namespace == "default"
+  msg := "Default namespace is not allowed"
+}
+
 

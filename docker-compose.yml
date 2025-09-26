@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  ops-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.ops-bot
+    ports:
+      - "8080:8080"
+    env_file:
+      - ops_bot/.env.example
+    restart: unless-stopped
+
