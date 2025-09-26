@@ -1,15 +1,7 @@
 ![DriftHawk Wordmark](dh_wordmark.png)
 
-[![tests](https://github.com/aurelius-in/DriftHawk/actions/workflows/tests.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/tests.yml)
-[![flake8](https://github.com/aurelius-in/DriftHawk/actions/workflows/flake8.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/flake8.yml)
-[![build-sign](https://github.com/aurelius-in/DriftHawk/actions/workflows/build-sign.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/build-sign.yml)
-[![tf-plan](https://github.com/aurelius-in/DriftHawk/actions/workflows/plan.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/plan.yml)
-[![codeql](https://github.com/aurelius-in/DriftHawk/actions/workflows/codeql.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/codeql.yml)
-[![tfsec](https://github.com/aurelius-in/DriftHawk/actions/workflows/tfsec.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/tfsec.yml)
 [![mypy](https://github.com/aurelius-in/DriftHawk/actions/workflows/mypy.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/mypy.yml)
 [![kubeconform](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml)
-[![isort](https://github.com/aurelius-in/DriftHawk/actions/workflows/isort.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/isort.yml)
-[![bandit](https://github.com/aurelius-in/DriftHawk/actions/workflows/bandit.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/bandit.yml)
 [![trivy-fs](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml)
 # *Spot drift. Ship proof.*
 Provision and govern private-cloud and OpenShift with Terraform and Argo CD, enforce OPA policies, sign and attest supply chain, automate approvals via ChatOps, and continuously validate gates with a red-team harness.
