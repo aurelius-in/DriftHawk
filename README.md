@@ -106,6 +106,30 @@ Nightly/Weekly → Red-Team Harness → expect policy failures
 * Policy bypass rate (red-team)
 * Monthly cost variance and per-change delta
 
+## Runbooks
+
+### Ops Bot
+- Start: `make run.bot` (Windows: `make run.bot.win`)
+- Health: `GET /healthz`, `GET /livez`, `GET /readyz`, `GET /statusz`
+- Metrics: `GET /metrics`
+- Logs: set `LOG_LEVEL` and `LOG_FORMAT=json` via ConfigMap/env
+
+### CI End-to-End
+- Ensure required secrets set (see secrets-check workflow)
+- Build & sign runs on push; tests/linters run on PRs and develop
+- Terraform plan+graph and OPA tests run on PRs
+
+### GitOps / Argo CD
+- Apply app: `make argo.sync`
+- Promote by updating overlay tag/digest; Argo sync policy will roll out
+- Rollback: revert digest or scale down via HPA if needed
+
+## Dashboards
+
+- Prometheus: request totals (`ops_bot_requests_total`), duration histogram (`ops_bot_request_duration_ms`)
+- Error rate: `ops_bot_errors_total` / `ops_bot_requests_total`
+- Suggested panels: request rate, error rate, p50/p95 latency, uptime seconds
+
 ## Getting started
 
 ```bash

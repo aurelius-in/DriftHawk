@@ -12,6 +12,8 @@ import hashlib
 import base64
 import random
 from datetime import datetime, timezone
+import re
+from typing import Any
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .middleware.request_id import RequestIdMiddleware
@@ -281,7 +283,7 @@ def reverse(body: TextBody):
 
 
 @app.post("/json/echo")
-def json_echo(body: dict):  # type: ignore[valid-type]
+def json_echo(body: dict[str, Any]):
     return {"json": body}
 
 
@@ -402,6 +404,75 @@ def tz():
 def weekday():
     now = datetime.now(timezone.utc)
     return {"weekday": now.strftime("%A")}
+
+
+@app.get("/now")
+def now_time():
+    now = datetime.now(timezone.utc)
+    return {"iso": now.isoformat()}
+
+
+@app.get("/echo/query")
+def echo_query(message: str | None = None):
+    return {"message": message}
+
+
+class CountBody(BaseModel):  # noqa: E402
+    text: str
+    substr: str | None = None
+
+
+@app.post("/string/count")
+def string_count(body: CountBody):
+    if body.substr is None:
+        return {"count": len(body.text)}
+    return {"count": body.text.count(body.substr)}
+
+
+@app.post("/string/slug")
+def string_slug(body: TextBody):
+    s = body.text.lower()
+    s = re.sub(r"[^a-z0-9]+", "-", s)
+    s = re.sub(r"-+", "-", s).strip("-")
+    return {"slug": s}
+
+
+class MathBody(BaseModel):  # noqa: E402
+    a: float
+    b: float
+
+
+@app.post("/math/sub")
+def math_sub(body: MathBody):
+    return {"result": float(body.a - body.b)}
+
+
+@app.post("/math/div")
+def math_div(body: MathBody):
+    if body.b == 0:
+        raise StarletteHTTPException(status_code=422, detail="division by zero")
+    return {"result": float(body.a / body.b)}
+
+
+@app.get("/env/all")
+def env_all():
+    # Return a shallow copy to avoid mutation
+    return {"env": dict(os.environ)}
+
+
+@app.get("/headers/plain")
+def headers_plain(request: Request):
+    def header_title_case(name: str) -> str:
+        parts = name.split("-")
+        return "-".join(p[:1].upper() + p[1:].lower() for p in parts if p)
+
+    lines: list[str] = []
+    for k, v in request.headers.items():
+        lk = k.lower()
+        if "authorization" in lk or "cookie" in lk:
+            continue
+        lines.append(f"{header_title_case(lk)}: {v}")
+    return Response("\n".join(lines) + "\n", media_type="text/plain; charset=utf-8")
 
 
 @app.get("/datetime")
