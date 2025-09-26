@@ -7,6 +7,15 @@ init:
 policy.test:
 	conftest test gitops/rollouts/ops-bot.yaml -p policy/opa
 
+policy.test.dev:
+	conftest test gitops/overlays/dev -p policy/opa
+
+policy.test.staging:
+	conftest test gitops/overlays/staging -p policy/opa
+
+policy.test.prod:
+	conftest test gitops/overlays/prod -p policy/opa
+
 tf.plan:
 	cd terraform/envs/$(ENV) && terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
 
@@ -51,6 +60,12 @@ drift.run:
 
 run.bot:
 	bash ops_bot/run.sh
+
+lint.py:
+	flake8 ops_bot
+
+test.bot:
+	pytest -q
 
 compose.up:
 	docker compose up -d

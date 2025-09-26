@@ -105,7 +105,7 @@ Nightly/Weekly → Red-Team Harness → expect policy failures
 ## Getting started
 
 ```bash
-pip install -r ops-bot/requirements.txt
+pip install -r ops_bot/requirements.txt
 make run.bot              # http://localhost:8080/docs
 
 make policy.test

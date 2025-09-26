@@ -9,4 +9,7 @@ terraform/*.tfstate*
 dist/
 node_modules/
 .venv/
+.pytest_cache/
+htmlcov/
+.coverage
 

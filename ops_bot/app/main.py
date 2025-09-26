@@ -39,3 +39,8 @@ def version():
   return {"git_sha": os.getenv("GIT_SHA", "unknown")}
 
 
+@app.get("/")
+def root():
+  return {"service": "DriftHawk Ops Bot", "endpoints": ["/chatops", "/change", "/healthz", "/livez", "/readyz", "/version"]}
+
+
