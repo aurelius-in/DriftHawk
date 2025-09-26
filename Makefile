@@ -25,6 +25,9 @@ policy.test.build.staging:
 policy.test.build.prod:
 	kustomize build gitops/overlays/prod | conftest test -p policy/opa -
 
+policy.test.build.all:
+	$(MAKE) policy.test.build.dev && $(MAKE) policy.test.build.staging && $(MAKE) policy.test.build.prod
+
 tf.plan:
 	cd terraform/envs/$(ENV) && terraform init -input=false && terraform plan -out=tfplan && terraform show -json tfplan > ../../artifacts/plan.json
 

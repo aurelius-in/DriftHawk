@@ -15,7 +15,8 @@ class TimingMiddleware(BaseHTTPMiddleware):
     response = await call_next(request)
     duration_ms = round((time.perf_counter() - start) * 1000, 2)
     req_id = getattr(request.state, "request_id", "-")
-    self.logger.info("request_id=%s duration_ms=%s", req_id, duration_ms)
+    client_ip = request.client.host if request.client else "-"
+    self.logger.info("request_id=%s client_ip=%s duration_ms=%s", req_id, client_ip, duration_ms)
     return response
 
 

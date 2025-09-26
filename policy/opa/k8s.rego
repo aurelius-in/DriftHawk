@@ -61,4 +61,39 @@ deny[msg] {
   msg := "hostNetwork is not allowed"
 }
 
+# Containers must not allow privilege escalation
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.containers[_].securityContext.allowPrivilegeEscalation == true
+  msg := "allowPrivilegeEscalation must be false"
+}
+
+# Containers must use readOnlyRootFilesystem
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.containers[_].securityContext.readOnlyRootFilesystem
+  msg := "readOnlyRootFilesystem must be set to true"
+}
+
+# Pod must set seccompProfile
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.securityContext.seccompProfile
+  msg := "Pod securityContext.seccompProfile must be set"
+}
+
+# Must not use default service account
+deny[msg] {
+  input.kind == "Deployment"
+  input.spec.template.spec.serviceAccountName == "default"
+  msg := "Default service account is not allowed"
+}
+
+# ServiceAccount token should not be automounted at pod level
+deny[msg] {
+  input.kind == "Deployment"
+  not input.spec.template.spec.automountServiceAccountToken
+  msg := "automountServiceAccountToken must be false"
+}
+
 

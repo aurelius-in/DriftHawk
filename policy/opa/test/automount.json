@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "automount-bad"},
+  "spec": {"template": {"spec": {"automountServiceAccountToken": true, "containers": [{"name": "c", "image": "alpine"}]}}}
+}
+

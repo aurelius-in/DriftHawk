@@ -15,6 +15,14 @@ jobs:
           sudo mv kustomize /usr/local/bin/
       - name: Build dev overlay
         run: kustomize build gitops/overlays/dev > /tmp/dev.yaml
-      - name: Conftest policy
+      - name: Policy (dev)
         run: conftest test /tmp/dev.yaml -p policy/opa
+      - name: Build staging overlay
+        run: kustomize build gitops/overlays/staging > /tmp/staging.yaml
+      - name: Policy (staging)
+        run: conftest test /tmp/staging.yaml -p policy/opa
+      - name: Build prod overlay
+        run: kustomize build gitops/overlays/prod > /tmp/prod.yaml
+      - name: Policy (prod)
+        run: conftest test /tmp/prod.yaml -p policy/opa
 
