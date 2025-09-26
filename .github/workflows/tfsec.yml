@@ -7,5 +7,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: aquasecurity/tfsec-action@v1
         with:
-          working_directory: terraform
+          working_directory: terraform/envs/dev
 
