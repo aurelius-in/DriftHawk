@@ -94,4 +94,7 @@ compose.down:
 metrics.curl:
 	curl -s http://localhost:8080/metrics | head -n 5
 
+quality:
+	$(MAKE) lint.py && $(MAKE) type.py && $(MAKE) test.bot
+
 

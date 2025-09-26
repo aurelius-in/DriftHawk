@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "lowuser"},
+  "spec": {"template": {"spec": {"securityContext": {"runAsUser": 9999}, "containers": [{"name": "c", "image": "alpine"}]}}}
+}
+

@@ -1,0 +1,6 @@
+{
+  "kind": "Deployment",
+  "metadata": {"name": "hi"},
+  "spec": {"template": {"spec": {"hostIPC": true, "containers": [{"name": "c", "image": "alpine"}]}}}
+}
+

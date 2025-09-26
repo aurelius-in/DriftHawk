@@ -10,6 +10,7 @@
 [![kubeconform](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/kubeconform.yml)
 [![isort](https://github.com/aurelius-in/DriftHawk/actions/workflows/isort.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/isort.yml)
 [![bandit](https://github.com/aurelius-in/DriftHawk/actions/workflows/bandit.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/bandit.yml)
+[![trivy-fs](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/trivy-fs.yml)
 # *Spot drift. Ship proof.*
 Provision and govern private-cloud and OpenShift with Terraform and Argo CD, enforce OPA policies, sign and attest supply chain, automate approvals via ChatOps, and continuously validate gates with a red-team harness.
 
