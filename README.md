@@ -1,4 +1,9 @@
 ![DriftHawk Wordmark](dh_wordmark.png)
+
+[![tests](https://github.com/aurelius-in/DriftHawk/actions/workflows/tests.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/tests.yml)
+[![flake8](https://github.com/aurelius-in/DriftHawk/actions/workflows/flake8.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/flake8.yml)
+[![build-sign](https://github.com/aurelius-in/DriftHawk/actions/workflows/build-sign.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/build-sign.yml)
+[![tf-plan](https://github.com/aurelius-in/DriftHawk/actions/workflows/plan.yml/badge.svg)](https://github.com/aurelius-in/DriftHawk/actions/workflows/plan.yml)
 # *Spot drift. Ship proof.*
 Provision and govern private-cloud and OpenShift with Terraform and Argo CD, enforce OPA policies, sign and attest supply chain, automate approvals via ChatOps, and continuously validate gates with a red-team harness.
 
@@ -115,6 +120,13 @@ make brief
 make argo.sync           
 make redteam.run         
 make drift.run           
+```
+
+## Tests
+
+```bash
+pip install -r ops_bot/requirements-dev.txt
+make test.bot
 ```
 
 ## Configuration

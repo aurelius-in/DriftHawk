@@ -64,6 +64,9 @@ run.bot:
 lint.py:
 	flake8 ops_bot
 
+type.py:
+	mypy ops_bot
+
 test.bot:
 	pytest -q
 
